@@ -6,10 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
-    @Controller
+@Controller
     @RestController
     @RequestMapping("/categoria")
     public class CategoriaController {
@@ -18,7 +20,6 @@ import java.util.List;
         CategoriaRepository categoriaRepository;
 
         @GetMapping
-        @ResponseBody
         public List<Categoria> listar(){
             return categoriaRepository.findAll();
         }
@@ -27,6 +28,25 @@ import java.util.List;
         public void cadastrar(@RequestBody Categoria categoria){
             categoriaRepository.save(categoria);
         }
+
+        @PutMapping("/{id}")
+        @Transactional
+        public void atualizar (@PathVariable Long id, @RequestBody  String descricao){
+            Optional<Categoria> categoriaBuscada = categoriaRepository.findById(id);
+            if (categoriaBuscada.isPresent()){
+
+                Categoria c = categoriaRepository.getById(id);
+                c.setDescricao(descricao);
+                categoriaRepository.save(c);
+
+            }
+        }
+
+        @DeleteMapping("/{id}")
+        @Transactional
+       public void excluir(@PathVariable Long id){
+            categoriaRepository.deleteById(id);
+        } 
 
 
 }
