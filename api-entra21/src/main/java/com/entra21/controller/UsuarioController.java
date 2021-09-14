@@ -1,28 +1,29 @@
 package com.entra21.controller;
 
 
-import com.entra21.model.Categoria;
+import com.entra21.controller.dto.UsuarioDto;
 import com.entra21.model.Usuario;
 import com.entra21.repositories.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
+
 @RestController
 @RequestMapping("/usuario")
 public class UsuarioController {
+
 
     @Autowired
     UsuarioRepository usuarioRepository;
 
     @GetMapping
-    @ResponseBody
-    public List<Usuario> listarCategoria(){
+    public List<UsuarioDto> listarUsuario(){
 
-        return usuarioRepository.findAll();
+       List<Usuario> usuarioList = usuarioRepository.findAll();
+       return UsuarioDto.converter(usuarioList);
     }
 
     @PostMapping

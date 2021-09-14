@@ -1,29 +1,45 @@
 package com.entra21.controller;
 
+
+import com.entra21.controller.dto.TopicoDto;
 import com.entra21.model.Curso;
 import com.entra21.model.Topico;
+import com.entra21.repositories.TopicoRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
 import java.util.List;
 
+
 @Controller
+@RestController
+@RequestMapping("/topico")
 public class TopicoController {
 
-    @RequestMapping("/topicos")
-    @ResponseBody
+    @Autowired
+    TopicoRepository topicoRepository;
 
-    public List<Topico> listarTopico(){
+    @GetMapping
+    public List<TopicoDto> listarTopico(String nomeCurso){
 
-        Curso c = new Curso();
-        c.setId(4L);
-        c.setNome("java");
+        List<Topico> topicos;
+
+        if (nomeCurso == null){
+            topicos = topicoRepository.findAll();
+        }
+        else{
+            topicos = topicoRepository.carregarPorNomeDoCurso(nomeCurso);
+        }
 
 
-    Topico t = new Topico("duvida", "oba to com uma duvida ae", new Curso(c));
-
-    return Arrays.asList(t,t,t,t);
+        return TopicoDto.converter(topicos);
     }
+
+    @PostMapping
+    public void cadastrar(@RequestBody Topico topico){
+        topicoRepository.save(topico);
+    }
+
+
 }

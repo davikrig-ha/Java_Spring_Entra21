@@ -1,5 +1,6 @@
 package com.entra21.controller;
 
+import com.entra21.controller.dto.CategoriaDto;
 import com.entra21.model.Categoria;
 import com.entra21.repositories.CategoriaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +21,12 @@ import java.util.Optional;
         CategoriaRepository categoriaRepository;
 
         @GetMapping
-        public List<Categoria> listar(){
-            return categoriaRepository.findAll();
+        public List<CategoriaDto> listar(){
+
+            List<Categoria> categoriaList = categoriaRepository.findAll();
+
+
+            return CategoriaDto.converter(categoriaList);
         }
 
         @PostMapping
@@ -46,7 +51,7 @@ import java.util.Optional;
         @Transactional
        public void excluir(@PathVariable Long id){
             categoriaRepository.deleteById(id);
-        } 
+        }
 
 
 }
